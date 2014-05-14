@@ -1,0 +1,91 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html ng-app="SearchApp">
+    <head>
+        <meta charset="utf-8" />
+
+        <script src="{% static 'js/jquery.js' %}"></script>
+        <script src="{% static 'js/angular.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'bootstrap-select/bootstrap-select.min.js' %}"></script>
+        <script src="{% static 'js/search_ui.js' %}"></script>
+        <script src="{% static 'js/search_app.js' %}"></script>
+       
+        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'bootstrap-select/bootstrap-select.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/layout.css' %}" />
+
+    </head>
+    {% verbatim %}
+    <body ng-controller="SearchController">
+        <div id="search-form-container">
+            <div class="wrapper">
+                <form role="form">
+                     <div class="input-group" id="search-form-elements">
+                        <input id="search-keyword" type="text" class="form-control" ng-model="search_keyword" placeholder="What are you looking for?" autofocus>
+                        <span class="input-group-btn">
+                            <select class="selectpicker" id="article-count" data-width="130px">
+                                <option data-content="<span class='badge'>10</span> articles" value="10">10</option>
+                                <option data-content="<span class='badge'>20</span> articles" value="20">20</option>
+                                <option data-content="<span class='badge'>30</span> articles" value="30">30</option>
+                                <option data-content="<span class='badge'>40</span> articles" value="40">40</option>
+                                <option data-content="<span class='badge'>50</span> articles" value="50">50</option>
+                            </select>
+                        </span>
+                        <span class="input-group-btn">
+                            <button id="search-submit" ng-click="search()" class="btn btn-blue" type="submit">
+                                <i class="fa fa-search"></i> Search
+                            </button>
+                       </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="results-container">
+            <div class="wrapper">
+                <div id="loading-results">
+                    <span class="text-muted">
+                        <i class="fa fa-spinner fa-spin"></i>
+                    </span>
+                </div>
+                <div id="search-results">
+                    <div class="page-header">
+                        <h1>{{search_heading}} <small>search results</small></h1>
+                    </div>
+                    <span class="text-muted" ng-if="results.length == 0">
+                        No results found
+                    </span>
+                    <ul class="media-list search-results-list">
+                        <li class="media" ng-repeat="result in results">
+                            <button ng-click="toggle_bookmark(result)" class="pull-right btn btn-circle bookmark-{{result.bookmarked}}">
+                                <i class="fa fa-star"></i>
+                            </button>
+                            <div class="media-body">
+                                <a href="{{result.url}}" target="blank"><h3 class="media-heading">{{result.title | htmlToPlaintext}}</h3></a>
+                                <ul class="list-inline article-attributes">
+                                    <li>
+                                    <strong><i class="fa fa-user text-muted"></i> Author: </strong>
+                                    {{result.author | htmlToPlaintext}}
+                                    </li>
+                                    <li>
+                                    <strong><i class="fa fa-book text-muted"></i> Venue: </strong>
+                                    {{result.venue | htmlToPlaintext}}
+                                    </li>
+                                </ul>
+                                <p>
+                                    {{result.abstract | htmlToPlaintext}}
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="btn btn-grey" ng-click="end()"><i class="fa fa-times"></i> End</button>
+                    <button class="btn btn-blue" ng-click="next()">Next <i class="fa fa-long-arrow-right"></i></button>
+                </div>
+
+                <button id="back-to-top" class="btn btn-grey btn-rounded"><i class="fa fa-chevron-up fa-sm"></i> Back to top</button>
+            </div>
+        </div>
+    </body>
+    {% endverbatim %}
+</html>
